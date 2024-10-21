@@ -3,19 +3,21 @@ import { RootState } from '../../app/Store/store';
 import { setClose } from '../drower/drowerSlice';
 import { BsArrowRightSquareFill } from "react-icons/bs";
 import { removeCart } from './cartSlice';
+import { AiTwotoneDelete } from "react-icons/ai";
 
 const CartView= () => {
   const cart = useSelector((state: RootState) => state.cart);
   const drawer = useSelector((state: RootState) => state.drower.open);
-  console.log(drawer)
+  
   const dispatch = useDispatch()
    
-  const handleRemove = (id:number) => {
+  const handleRemove = (id:string) => {
     dispatch(removeCart({ id }));
   };
+  
   return (
     <div
-      className={`fixed top-[0px] z-50 right-0 h-full bg-white shadow-lg transition-transform transform ${
+      className={`fixed top-[0px] w-full md:w-[20%] z-50 right-0 h-screen  bg-white shadow-lg transition-transform transform ${
         drawer ? 'translate-x-0' : 'translate-x-full'
       } duration-300`}
     >
@@ -29,7 +31,7 @@ const CartView= () => {
     </p>
       <div className="p-8">
         <h2 className="text-xl font-semibold">Cart</h2>
-        <div className="mt-4">
+        <div className="mt-4  flex-grow overflow-y-auto max-h-[70vh]">
           {cart.items.length === 0 ? (
             <p>Your cart is empty</p>
           ) : (
@@ -42,7 +44,8 @@ const CartView= () => {
                 </div>
                 <div>
                 
-                <button onClick={()=>handleRemove(item?.id)}>X</button>
+                <button onClick={()=>handleRemove(item?.id)}><AiTwotoneDelete size={20}  color='red'/>
+                </button>
                 </div>
               </div>
             ))

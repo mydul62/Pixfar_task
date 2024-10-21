@@ -15,7 +15,7 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="w-full top-0 z-50 fixed bg-white shadow">
+    <nav className="w-full fixed top-0 z-50  bg-white shadow">
       <div className="container  px-6 py-4 mx-auto md:flex md:justify-between md:items-center">
         <div className="flex items-center justify-between">
           <a href="#">
@@ -65,11 +65,11 @@ const Navbar = () => {
             ))}
           </div>
 
-          <div className=" hidden md:flex items-center justify-center">
-            <a onClick={()=>{
+          <div title='View Card' onClick={()=>{
              dispatch(setOpen())
              setIsOpen(false)
-            }} className="relative text-gray-700 transition-colors duration-300 transform hover:text-gray-600" href="#">
+            }} className=" hidden cursor-pointer md:flex items-center justify-center">
+            <a  className="relative text-gray-700 transition-colors duration-300 transform hover:text-gray-600" href="#">
               <FaShoppingCart className="w-10 h-6" />
               <span className="absolute -top-3 left-0 p-1 text-xs text-white bg-blue-500 rounded-full">{cart?.items?.length}</span>
             </a>
