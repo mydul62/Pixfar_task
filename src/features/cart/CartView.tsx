@@ -2,15 +2,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../app/Store/store';
 import { setClose } from '../drower/drowerSlice';
 import { BsArrowRightSquareFill } from "react-icons/bs";
+import { removeCart } from './cartSlice';
 
 const CartView= () => {
   const cart = useSelector((state: RootState) => state.cart);
   const drawer = useSelector((state: RootState) => state.drower.open);
   console.log(drawer)
   const dispatch = useDispatch()
-  console.log(cart)
    
-
+  const handleRemove = (id:number) => {
+    dispatch(removeCart({ id }));
+  };
   return (
     <div
       className={`fixed top-[0px] z-50 right-0 h-full bg-white shadow-lg transition-transform transform ${
@@ -33,10 +35,14 @@ const CartView= () => {
           ) : (
             cart.items.map((item,i) => (
             
-              <div key={i} className="flex justify-between items-center border-b py-2">
+              <div key={i} className="flex justify-between gap-6 items-center border-b py-2">
                 <div>
                   <h3 className="font-semibold">{item.name}</h3>
                   <p>${item.price} x {item.quantity}</p>
+                </div>
+                <div>
+                
+                <button onClick={()=>handleRemove(item?.id)}>X</button>
                 </div>
               </div>
             ))
