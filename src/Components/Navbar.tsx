@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { FaBars, FaTimes, FaShoppingCart } from 'react-icons/fa';
-
-const Navbar: React.FC = () => {
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../app/Store/store';
+import { setOpen } from '../features/drower/drowerSlice';
+const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const cart = useSelector((state: RootState) => state.cart);  
+  const dispatch = useDispatch()
   const navLinks = [
     { name: 'Home', href: '#' },
     { name: 'Shop', href: '#' },
@@ -12,17 +15,26 @@ const Navbar: React.FC = () => {
   ];
 
   return (
-    <nav className="relative bg-white shadow">
-      <div className="container px-6 py-6 mx-auto md:flex md:justify-between md:items-center">
+    <nav className="w-full top-0 z-50 fixed bg-white shadow">
+      <div className="container  px-6 py-4 mx-auto md:flex md:justify-between md:items-center">
         <div className="flex items-center justify-between">
           <a href="#">
-            <h2 className="text-3xl font-medium">
+            <h2 className=" text-2xl md:text-3xl font-medium">
               Shoping<span className="text-green-500">Ghor</span>
             </h2>
           </a>
 
           {/* Mobile menu button */}
-          <div className="flex lg:hidden">
+          <div className="flex items-center gap-4 lg:hidden">
+          <div className="flex items-center justify-center">
+            <a onClick={()=>{
+             dispatch(setOpen())
+             setIsOpen(false)
+            }} className="relative text-gray-700 transition-colors duration-300 transform hover:text-gray-600" href="#">
+              <FaShoppingCart className="w-10 h-6" />
+              <span className="absolute -top-3 left-0 p-1 text-xs text-white bg-blue-500 rounded-full">{cart?.items?.length}</span>
+            </a>
+          </div>
             <button
               onClick={() => setIsOpen(!isOpen)}
               type="button"
@@ -53,11 +65,17 @@ const Navbar: React.FC = () => {
             ))}
           </div>
 
-          <div className="flex justify-center md:block">
-            <a className="relative text-gray-700 transition-colors duration-300 transform hover:text-gray-600" href="#">
-              <FaShoppingCart className="w-5 h-5" />
-              <span className="absolute top-0 left-0 p-1 text-xs text-white bg-blue-500 rounded-full"></span>
+          <div className=" hidden md:flex items-center justify-center">
+            <a onClick={()=>{
+             dispatch(setOpen())
+             setIsOpen(false)
+            }} className="relative text-gray-700 transition-colors duration-300 transform hover:text-gray-600" href="#">
+              <FaShoppingCart className="w-10 h-6" />
+              <span className="absolute -top-3 left-0 p-1 text-xs text-white bg-blue-500 rounded-full">{cart?.items?.length}</span>
             </a>
+            <p className='p-2 rounded-full bg-slate-100'>
+      {cart?.totalPrice ? (Math.round(cart.totalPrice * 100) / 100).toFixed(2) : "0.00"}$
+</p>
           </div>
         </div>
       </div>
