@@ -1,4 +1,5 @@
 # E-Commerce Product List Application
+LIVE: https://task-pixfar.vercel.app/
 
 ### Say hello to the future.
 
@@ -30,32 +31,6 @@ The application showcases a product listing page where users can:
 - **Cart persistence with Redux Persist**: Cart data is stored in localStorage, allowing users to maintain their cart state even after refreshing the page.
 - **Mobile-first, responsive design**: The application is designed to be responsive, ensuring that it works well on both mobile and desktop devices.
 - **Type safety with TypeScript**: TypeScript is used throughout the project to enforce robust type-checking and reduce runtime errors.
-
-## Setup Instructions
-
-### Prerequisites
-- Node.js (version >= 14.x)
-- npm (version >= 6.x) or yarn (version >= 1.x)
-
-### Steps to Run Locally
-
-```1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-username/task-pixfar.git```
-
-```2.Navigate to the project directory:
-
-cd task-pixfar```
-
-```3.Install the required dependencies:
-
-npm install```
-
-```4.Start the development server:
-
-npm start```
-
-
 ## Environment Setup
 
 This application does not require any additional environment variables. It uses the FakeStore API as the product data source.
@@ -67,4 +42,29 @@ This application does not require any additional environment variables. It uses 
 - **Cart Management**: Users can add items to the cart, with a summary of total items and price displayed at the top.
 - **Cart Persistence**: The cart state is persisted in `localStorage`, ensuring that the cart remains intact after page reloads.
 - **Responsive Design**: The application is fully responsive, offering an optimal experience on both mobile and desktop devices.
+
+## Setup Instructions
+
+### Prerequisites
+- Node.js (version >= 14.x)
+- npm (version >= 6.x) or yarn (version >= 1.x)
+
+### Steps to Run Locally
+
+```1. Clone the repository:
+
+ git clone https://github.com/your-username/task-pixfar.git```
+
+2.Navigate to the project directory:
+
+cd task-pixfar
+
+3.Install the required dependencies:
+
+npm install
+
+4.Start the development server:
+
+npm start
+
 
