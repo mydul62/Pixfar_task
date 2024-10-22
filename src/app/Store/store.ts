@@ -1,4 +1,5 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
+import productsApi from '../../features/productsapi/apiSlice'
 import cartReducer from "../../features/cart/cartSlice"
 import drowerReducer from '../../features/drower/drowerSlice'; 
 import { persistStore, persistReducer } from "redux-persist";
@@ -10,6 +11,7 @@ const cartPersistConfig = {
 };
 
 const rootReducer = combineReducers({
+  [productsApi.reducerPath]: productsApi.reducer,
   cart: persistReducer(cartPersistConfig, cartReducer),
   drower: drowerReducer,
 });
@@ -17,7 +19,7 @@ const rootReducer = combineReducers({
 export const store = configureStore({
   reducer: rootReducer,
   middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().concat(),
+    getDefaultMiddleware().concat(productsApi.middleware),
 });
 
 export const persistor = persistStore(store);

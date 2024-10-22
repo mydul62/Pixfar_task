@@ -6,7 +6,7 @@ import { addToCart } from "../../features/cart/cartSlice.ts";
 import CartView from "../../features/cart/CartView.tsx";
 import Swal from "sweetalert2";
 import InfiniteScroll from "react-infinite-scroll-component";
-import useProducts from "../../Hooks/useProducts.ts"
+import useProducts from "../../Hooks/useProducts.ts";
 
 interface Product {
   id: string;
@@ -25,9 +25,9 @@ interface CartItem {
 }
 
 const Products = () => {
-  const { allProducts, displayedProducts, fetchMoreData, hasMore, isLoading } = useProducts();
+  const { displayedProducts, fetchMoreData, hasMore, isLoading } = useProducts();
   const [searchItem, setSearchItem] = useState<string>("");
-  const [searchedProducts, setSearchedProducts] = useState<Product[] | null>(null);
+  const [searchedProducts, setSearchedProducts] = useState<Product[]>([]); // Changed to array
   const dispatch = useDispatch();
 
   const handleCartAdd = (product: Product) => {
@@ -49,21 +49,23 @@ const Products = () => {
   };
 
   const handleSearch = () => {
-    if (allProducts) {
-      const results = allProducts.filter((product: Product) =>
-        product.title.toLowerCase().includes(searchItem.toLowerCase())
-      );
-      setSearchedProducts(results);
+    if (searchItem.trim() === "") {
+      setSearchedProducts([]);
+      return;
     }
+    const results = displayedProducts.filter((product: Product) =>
+      product.title.toLowerCase().includes(searchItem.toLowerCase())
+    );
+    setSearchedProducts(results);
   };
 
   return (
     <div className="my-24 md:my-24 md:mt-32 container px-6 py-6 mx-auto">
       <div className="title mb-12 md:flex justify-start items-center gap-12">
         <h1 className="text-2xl font-semibold">
-          {searchedProducts && searchedProducts.length > 0
+          {searchedProducts.length > 0
             ? `Search Result (${searchedProducts.length})`
-            : displayedProducts && displayedProducts.length > 0
+            : displayedProducts.length > 0
             ? `All Products (${displayedProducts.length})`
             : "All Products (00)"}
         </h1>
@@ -85,29 +87,21 @@ const Products = () => {
         </div>
       </div>
 
-      {!isLoading ? (
+      {
         <InfiniteScroll
-          dataLength={displayedProducts.length}
+          dataLength={searchedProducts.length > 0 ? searchedProducts.length : displayedProducts.length}
           next={fetchMoreData}
           hasMore={hasMore}
           loader={<Loading />}
-          endMessage={<p style={{ textAlign: "center", paddingTop:'40px', fontSize:'20px' }}>You have reached all Products</p>}
+          endMessage={<p style={{ textAlign: 'center' }}>You have reached the end!</p>}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {(searchedProducts || displayedProducts)?.map((product: Product) => (
-              <Product
-                key={product.id}
-                handleCartAdd={handleCartAdd}
-                product={product}
-              />
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {(searchedProducts.length > 0 ? searchedProducts : displayedProducts).map((product) => (
+              <Product key={product.id} product={product} handleCartAdd={handleCartAdd} />
             ))}
           </div>
         </InfiniteScroll>
-      ) : (
-        <div>
-          <Loading />
-        </div>
-      )}
+      }
       <CartView />
     </div>
   );

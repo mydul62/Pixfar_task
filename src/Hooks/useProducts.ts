@@ -1,46 +1,32 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { useGetProductsQuery } from "../features/productsapi/apiSlice";
 
-interface Product {
-  id: string;
-  title: string;
-  price: number;
-  description: string;
-  image: string;
-}
 
 const useProducts = () => {
-  const [allProducts, setAllProducts] = useState<Product[]>([]);
-  const [displayedProducts, setDisplayedProducts] = useState<Product[]>([]);
+  const { data: products = [], isLoading } = useGetProductsQuery();
+  const [displayedProducts, setDisplayedProducts] = useState<any[]>([]);
   const [hasMore, setHasMore] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
+  const limit = 8;
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const { data } = await axios.get("https://fakestoreapi.com/products");
-        setAllProducts(data);
-        setDisplayedProducts(data.slice(0, 8)); // Show the first 8 initially
-        setIsLoading(false);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-        setIsLoading(false);
-      }
-    };
-
-    fetchProducts();
-  }, []);
+    if (products.length) {
+      setDisplayedProducts(products.slice(0, limit)); 
+    }
+  }, [products]);
 
   const fetchMoreData = () => {
-    if (displayedProducts.length >= allProducts.length) {
+    if (displayedProducts.length >= products.length) {
       setHasMore(false);
       return;
     }
-    const nextProducts = allProducts.slice(displayedProducts.length, displayedProducts.length + 4);
-    setDisplayedProducts(prev => [...prev, ...nextProducts]);
+    const nextProducts = products.slice(
+      displayedProducts.length,
+      displayedProducts.length + limit
+    );
+    setDisplayedProducts((prev) => [...prev, ...nextProducts]);
   };
 
-  return { allProducts, displayedProducts, fetchMoreData, hasMore, isLoading };
+  return { products, displayedProducts, fetchMoreData, hasMore, isLoading };
 };
 
 export default useProducts;
