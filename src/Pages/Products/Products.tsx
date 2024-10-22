@@ -1,11 +1,12 @@
 import Product from "./Product/product.tsx";
 import Loading from "./Loading.tsx";
-import { useGetProductsQuery } from "../../features/Products/productsApi.ts";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../features/cart/cartSlice.ts";
 import CartView from "../../features/cart/CartView.tsx";
 import Swal from "sweetalert2";
+import InfiniteScroll from "react-infinite-scroll-component";
+import useProducts from "../../Hooks/useProducts.ts"
 
 interface Product {
   id: string;
@@ -14,6 +15,7 @@ interface Product {
   description: string;
   image: string;
 }
+
 interface CartItem {
   id: string;
   name: string;
@@ -23,11 +25,9 @@ interface CartItem {
 }
 
 const Products = () => {
-  const { data: products, isLoading } = useGetProductsQuery("");
+  const { allProducts, displayedProducts, fetchMoreData, hasMore, isLoading } = useProducts();
   const [searchItem, setSearchItem] = useState<string>("");
-  const [searchedProducts, setSearchedProducts] = useState<Product[] | null>(
-    null
-  );
+  const [searchedProducts, setSearchedProducts] = useState<Product[] | null>(null);
   const dispatch = useDispatch();
 
   const handleCartAdd = (product: Product) => {
@@ -49,8 +49,8 @@ const Products = () => {
   };
 
   const handleSearch = () => {
-    if (products) {
-      const results = products.filter((product: Product) =>
+    if (allProducts) {
+      const results = allProducts.filter((product: Product) =>
         product.title.toLowerCase().includes(searchItem.toLowerCase())
       );
       setSearchedProducts(results);
@@ -58,13 +58,13 @@ const Products = () => {
   };
 
   return (
-    <div className="my-12 md:my-24 md:mt-32 container px-6 py-6 mx-auto">
+    <div className="my-24 md:my-24 md:mt-32 container px-6 py-6 mx-auto">
       <div className="title mb-12 md:flex justify-start items-center gap-12">
         <h1 className="text-2xl font-semibold">
           {searchedProducts && searchedProducts.length > 0
             ? `Search Result (${searchedProducts.length})`
-            : products && products.length > 0
-            ? `All Products (${products.length})`
+            : displayedProducts && displayedProducts.length > 0
+            ? `All Products (${displayedProducts.length})`
             : "All Products (00)"}
         </h1>
 
@@ -86,21 +86,29 @@ const Products = () => {
       </div>
 
       {!isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {(searchedProducts || products)?.map((product: Product) => (
-            <Product
-              key={product.id}
-              handleCartAdd={handleCartAdd}
-              product={product}
-            />
-          ))}
-        </div>
+        <InfiniteScroll
+          dataLength={displayedProducts.length}
+          next={fetchMoreData}
+          hasMore={hasMore}
+          loader={<Loading />}
+          endMessage={<p style={{ textAlign: "center", paddingTop:'40px', fontSize:'20px' }}>You have reached all Products</p>}
+        >
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {(searchedProducts || displayedProducts)?.map((product: Product) => (
+              <Product
+                key={product.id}
+                handleCartAdd={handleCartAdd}
+                product={product}
+              />
+            ))}
+          </div>
+        </InfiniteScroll>
       ) : (
         <div>
           <Loading />
         </div>
       )}
-      <CartView></CartView>
+      <CartView />
     </div>
   );
 };

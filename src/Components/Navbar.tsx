@@ -38,7 +38,7 @@ const Navbar = () => {
             <button
               onClick={() => setIsOpen(!isOpen)}
               type="button"
-              className="text-gray-500 hover:text-gray-600 focus:outline-none focus:text-gray-600"
+              className="text-gray-500 md:hidden hover:text-gray-600 focus:outline-none focus:text-gray-600"
               aria-label="toggle menu"
             >
               {!isOpen ? <FaBars className="w-6 h-6" /> : <FaTimes className="w-6 h-6" />}
