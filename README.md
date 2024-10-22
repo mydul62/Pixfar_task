@@ -53,7 +53,7 @@ This application does not require any additional environment variables. It uses 
 
 ```1. Clone the repository:
 
- git clone https://github.com/your-username/task-pixfar.git```
+git clone https://github.com/your-username/task-pixfar.git
 
 2.Navigate to the project directory:
 
