@@ -1,10 +1,10 @@
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-
+// import { Audio } from 'react-loader-spinner'
 const Loading = () => {
   return (
     <div className=" container px-6 py-6 mx-auto  grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  gap-6 ">
-      {Array.from({ length: 9 }).map((_, index) => (
+      {Array.from({ length: 8 }).map((_, index) => (
          <div key={index} className="overflow-hidden border-2 border-[#b7b4b426] rounded-[6px]">
          <div className="relative p-3">
            <Skeleton className="w-full h-[400px] object-cover border-b border-[#cccccc43]" />
@@ -22,6 +22,16 @@ const Loading = () => {
        </div>
       ))}
     </div>
+//     <div className=' flex justify-center items-center'>
+//     <Audio
+//   height="80"
+//   width="80"
+//   radius="9"
+//   color="green"
+//   ariaLabel="three-dots-loading"
+
+// />
+//     </div>
   );
 };
 

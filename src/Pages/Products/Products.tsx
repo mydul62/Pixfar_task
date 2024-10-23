@@ -25,9 +25,8 @@ interface CartItem {
 }
 
 const Products = () => {
-  const { displayedProducts, fetchMoreData, hasMore, isLoading } = useProducts();
+  const { displayedProducts, fetchMoreData, hasMore, handleSearch, searchedProducts } = useProducts();
   const [searchItem, setSearchItem] = useState<string>("");
-  const [searchedProducts, setSearchedProducts] = useState<Product[]>([]); // Changed to array
   const dispatch = useDispatch();
 
   const handleCartAdd = (product: Product) => {
@@ -48,15 +47,8 @@ const Products = () => {
     });
   };
 
-  const handleSearch = () => {
-    if (searchItem.trim() === "") {
-      setSearchedProducts([]);
-      return;
-    }
-    const results = displayedProducts.filter((product: Product) =>
-      product.title.toLowerCase().includes(searchItem.toLowerCase())
-    );
-    setSearchedProducts(results);
+  const searchProduct = () => {
+    handleSearch(searchItem);
   };
 
   return (
@@ -81,19 +73,17 @@ const Products = () => {
             />
           </div>
 
-          <button onClick={handleSearch} className="h-12 bg-yellow-200 px-6">
+          <button onClick={searchProduct} className="h-12 bg-yellow-200 px-6">
             Search
           </button>
         </div>
       </div>
-
-      {
         <InfiniteScroll
           dataLength={searchedProducts.length > 0 ? searchedProducts.length : displayedProducts.length}
           next={fetchMoreData}
           hasMore={hasMore}
           loader={<Loading />}
-          endMessage={<p style={{ textAlign: 'center' }}>You have reached the end!</p>}
+          endMessage={<p style={{ textAlign: 'center', marginTop:'20px', fontSize:'20px' }}>You have reached the end!</p>}
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {(searchedProducts.length > 0 ? searchedProducts : displayedProducts).map((product) => (
@@ -101,7 +91,7 @@ const Products = () => {
             ))}
           </div>
         </InfiniteScroll>
-      }
+
       <CartView />
     </div>
   );
